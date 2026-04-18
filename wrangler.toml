@@ -1,0 +1,15 @@
+name = "eitanrepeat"
+compatibility_date = "2026-03-11"
+pages_build_output_dir = "."
+
+[env.production]
+[[env.production.d1_databases]]
+binding = "ACCESS_LOG_DB"
+database_name = "eitanrepeat-access-log"
+database_id = "9683881c-cd06-42af-a454-a721400f4e19"
+
+[env.preview]
+[[env.preview.d1_databases]]
+binding = "ACCESS_LOG_DB"
+database_name = "eitanrepeat-access-log"
+database_id = "9683881c-cd06-42af-a454-a721400f4e19"

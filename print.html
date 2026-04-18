@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>小テスト印刷</title>
+
+  <!-- 既存のフォント等を流用 -->
+  <link rel="stylesheet" href="./style.css?v=67">
+
+  <style>
+    /* 印刷専用の見た目 */
+    :root{
+      --line:#7c94c8;
+      --ink:#111827;
+      --muted:#6b7280;
+      --ans:#e11d48;
+    }
+    body{ background:#fff; }
+    .toolbar{
+      display:flex; gap:10px; padding:12px 16px; border-bottom:1px solid #e5e7eb;
+      position:sticky; top:0; background:#fff; z-index:10;
+    }
+    .toolbar button{ border-radius:10px; }
+
+    .page{
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 10mm;
+      box-sizing: border-box;
+    }
+    .meta{
+      font-size:11px; color:var(--muted);
+      display:flex; justify-content:space-between; align-items:flex-start;
+      margin-bottom:4mm;
+      white-space:pre-line;
+    }
+    .title{
+      text-align:center;
+      font-size:18px;
+      font-weight:700;
+      letter-spacing:.5px;
+      margin: 2mm 0 6mm;
+    }
+
+    /* 2面レイアウト（左列/右列に流し込む） */
+    .twoCols{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6mm;
+    }
+
+    .qrow{
+      display:grid;
+      grid-template-columns: 12mm 1fr;
+      gap: 3mm;
+      align-items:stretch;
+      margin-bottom: 3mm;
+    }
+    .idBox{
+      border:1px solid var(--line);
+      border-radius:4px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:11px;
+      color:var(--muted);
+    }
+    .mainBox{
+      border:1px solid var(--line);
+      border-radius:4px;
+      min-height:12mm;
+      padding:2mm 3mm;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 6mm;
+    }
+    .word{
+      font-size:13px;
+      font-weight:600;
+      color:var(--ink);
+      overflow:hidden;
+      white-space:nowrap;
+      max-width: 68mm;
+    }
+    .blank{
+      flex:1;
+      border-left:1px solid rgba(124,148,200,.35);
+      min-height: 8mm;
+    }
+    .ansText{
+      margin-left:2mm;
+      font-size:8px;
+      color:var(--ans);
+      white-space:normal;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width: 75mm;
+    }
+    .footerNote{
+      margin-top:4mm;
+      font-size:10px;
+      color:var(--muted);
+    }
+
+    /* 印刷時 */
+    @media print{
+      @page { size: A4 portrait; margin: 4mm; }
+      .body{ zoom: 0.8; }
+      .meta{ margin-bottom: 1mm; font-size:10px; }
+      .title{ font-size:12px; margin: 1mm 0 3mm; }
+      .footerNote{ display:none; }
+      .toolbar{ display:none; }
+      .page{ padding:0; width:auto; min-height:auto; }
+      .page.break{ page-break-after: always; }
+      .qrow{ margin-bottom: 1mm; }
+      .mainBox{ height: 6mm; font-size:10px; }
+      .ansText{ font-size:10px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="toolbar">
+    <button id="printBtn" class="primary">印刷</button>
+    <button id="regenBtn" class="secondary">50問を引き直す</button>
+    <button id="backBtn" class="ghost">戻る</button>
+  </div>
+
+  <!-- 1枚目：問題のみ -->
+  <section class="page break" id="pageQ">
+    <div class="meta" id="metaQ"></div>
+    <div class="title" id="titleQ">[単語集名称]</div>
+    <div class="twoCols">
+      <div id="qLeft"></div>
+      <div id="qRight"></div>
+    </div>
+    <div class="footerNote">※ 1枚目：問題のみ</div>
+  </section>
+
+  <!-- 2枚目：問題＋回答 -->
+  <section class="page" id="pageQA">
+    <div class="meta" id="metaQA"></div>
+    <div class="title" id="titleQA">[単語集名称]</div>
+    <div class="twoCols">
+      <div id="qaLeft"></div>
+      <div id="qaRight"></div>
+    </div>
+    <div class="footerNote">※ 2枚目：問題＋回答</div>
+  </section>
+
+  <script src="./print.js?v=67"></script>
+</body>
+</html>

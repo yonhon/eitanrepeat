@@ -1,0 +1,9 @@
+{
+  "name": "英単語繰り返して覚えるアプリ",
+  "short_name": "英単語繰返",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": []
+}

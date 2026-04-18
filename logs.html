@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>アクセスログ（月次・端末別）</title>
+  <link rel="stylesheet" href="./style.css?v=67">
+  <style>
+    .logsWrap { max-width: 840px; margin: 16px auto; }
+    .logsHead { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+    .logsTable { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #d9e2f2; border-radius: 12px; overflow: hidden; }
+    .logsTable th, .logsTable td { border-bottom: 1px solid #eef2f7; padding: 10px 12px; text-align: left; }
+    .logsTable th { background: #f8fbff; font-weight: 700; }
+    .logsTable tr:last-child td { border-bottom: 0; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .monthCell { white-space: nowrap; font-weight: 700; }
+    .clientCell { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; word-break: break-all; }
+    .emptyRow td { color: #6b7280; }
+  </style>
+</head>
+<body>
+  <main class="container logsWrap">
+    <h1>アクセスログ（月次・端末別）</h1>
+    <div class="card">
+      <div class="logsHead">
+        <label class="label" for="monthsSelect">表示期間</label>
+        <select id="monthsSelect">
+          <option value="6">直近6か月</option>
+          <option value="12" selected>直近12か月</option>
+          <option value="24">直近24か月</option>
+          <option value="36">直近36か月</option>
+        </select>
+        <button id="reloadBtn" class="secondary">再読み込み</button>
+      </div>
+
+      <div id="statusText" class="muted" style="margin-bottom:10px;">読み込み中...</div>
+      <table class="logsTable" aria-describedby="statusText">
+        <thead>
+          <tr>
+            <th>月</th>
+            <th>端末ID</th>
+            <th class="num">アクセス数</th>
+          </tr>
+        </thead>
+        <tbody id="logsBody"></tbody>
+      </table>
+    </div>
+  </main>
+  <script src="./logs.js?v=1"></script>
+</body>
+</html>

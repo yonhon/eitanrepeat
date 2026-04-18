@@ -1,0 +1,118 @@
+/* Minimal, fast UI (no frameworks) */
+:root{
+  --bg:#f6f7f9;
+  --card:#ffffff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:#e2e8f0;
+  --primary:#2563eb;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans JP","Hiragino Sans","Yu Gothic UI","Yu Gothic",sans-serif;
+  color:var(--text);
+  background:var(--bg);
+}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  background:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.title{font-weight:700}
+.status{font-size:12px;color:var(--muted);text-align:right;white-space:pre-line}
+.container{max-width:720px;margin:0 auto;padding:16px}
+.screen{display:block}
+.hidden{display:none}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  margin:12px 0;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.row{display:flex;gap:12px;align-items:flex-start;margin:10px 0}
+.stack{display:flex;flex-direction:column;gap:6px}
+.label{width:110px;color:var(--muted);padding-top:6px}
+.labelInline{color:var(--muted);margin-right:10px}
+select,input[type="file"],textarea{
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+  font-size:16px;
+  background:#fff;
+}
+textarea{resize:vertical}
+.btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;width:100%;justify-content:flex-start;flex-direction:row}
+button{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px 14px;
+  font-size:16px;
+  background:#fff;
+  cursor:pointer;
+}
+button.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+button.secondary{background:#fff;color:var(--text)}
+button.ghost{background:transparent}
+button:disabled{opacity:.5;cursor:not-allowed}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.code{background:#0b1020;color:#e5e7eb;padding:10px;border-radius:10px;overflow:auto}
+.testHeader{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.progress{font-weight:700}
+.scoreMini{color:var(--muted);font-size:14px}
+.wordBox{margin:14px 0}
+.word{font-size:36px;font-weight:800;letter-spacing:.5px}
+.posHint{color:var(--muted);font-size:13px;margin-top:6px}
+.feedback{
+  margin-top:10px;
+  padding:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+}
+.feedback.ok{border-color:rgba(22,163,74,.4);background:rgba(22,163,74,.08)}
+.feedback.ng{border-color:rgba(220,38,38,.35);background:rgba(220,38,38,.08)}
+.resultLine{margin:8px 0;font-size:18px}
+.list{margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.item{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:10px;
+  background:#fff;
+}
+.item .w{font-weight:700}
+.item .a{color:var(--muted)}
+.speechControls{display:flex;gap:10px;align-items:center;margin-top:8px;width:100%;justify-content:flex-start;flex-direction:row}
+
+
+/* Alias classes to avoid confusion */
+
+/* Speech controls: DOM order is 確定 → 話す. We only change alignment (no order flipping). */
+
+/* Alignment classes: order is controlled ONLY by DOM. */
+.align-left{justify-content:flex-start}
+.align-right{justify-content:flex-end}
+
+.smallbtn{padding:6px 10px;font-size:13px;border-radius:10px}
+
+.exampleBox{margin-top:10px;padding:10px;border-radius:12px;border:1px solid var(--border);background:#fff}
+.exampleBox .en{font-weight:600;margin-bottom:6px}
+.exampleBox .ja{color:var(--muted)}
+
+.rightBox{display:flex;align-items:center;gap:10px}
+
+
+.countLink{ text-decoration: underline; color: inherit; }
+.countLink:focus{ outline: 2px solid currentColor; outline-offset: 2px; }
+
+
+.secondaryBtn{ display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid var(--border,#ccc); text-decoration:none; color:inherit; }

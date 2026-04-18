@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>英単語繰り返して覚えるアプリ</title>
+  <link rel="manifest" href="./manifest.json?v=67">
+  <link rel="stylesheet" href="./style.css?v=67">
+</head>
+<body>
+  <header class="topbar">
+    <div class="title">英単語繰り返して覚えるアプリ</div>
+    <div class="rightBox">
+      <button id="endBtn" class="ghost smallbtn hidden">終了</button>
+      <div class="status" id="netStatus"></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="screenHome" class="screen">
+      <h1>学習開始</h1>
+
+      <div class="card">        <div class="row">
+          <label class="label">単語集</label>
+          <select id="bookSelect">
+            <option value="A1">中学2年生レベル（1,165語）</option>
+            <option value="A2">高校1年生レベル（1,411語）</option>
+            <option value="B1">高校3年生レベル（2,444語）</option>
+            <option value="B2">大学中上級レベル（2,779語）</option>
+          </select>
+        </div>
+
+
+        <div class="row">
+          <label class="label">問題数</label>
+          <select id="countSelect">
+            <option value="10">10</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="200">200</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label class="label">学習モード</label>
+          <select id="modeSelect">
+            <option value="normal">通常（全体80% + 弱点20%）</option>
+            <option value="weak">弱点克服（弱点のみ）</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label class="label">学習状況</label>
+          <div class="stack">
+            <div class="muted">正解：<a id="homeCorrectLink" class="countLink" href="#list=correct"><b id="homeCorrectCount">0</b></a> 語</div>
+            <div class="muted">弱点：<a id="weakLink" class="countLink" href="#list=weak"><b id="weakCount">0</b></a> 語</div>
+            <div class="muted">克服：<a id="masteredLink" class="countLink" href="#list=mastered"><b id="masteredCount">0</b></a> 語</div>
+            <div class="muted">※ 弱点は、通常モードで正解したときに克服に移動します。</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="label">履歴管理</label>
+          <div class="stack">
+            <div class="muted">端末内に学習履歴を保存します。</div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button id="exportDbBtn" class="secondary">保存</button>
+              <button id="importDbBtn" class="secondary">読込</button>
+              <button id="clearDbBtn" class="ghost">削除</button>
+            </div>
+            <input id="importDbFile" type="file" accept="application/json" class="hidden" />
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="label">ボタン位置</label>
+          <select id="buttonAlignSelect">
+            <option value="left">左端</option>
+            <option value="right">右端</option>
+          </select>
+        </div>
+        </div>
+
+        <div class="row">
+          <button id="startBtn" class="primary">開始</button>
+          <button id="printQuizBtn" class="secondary">小テスト印刷</button>
+        </div>
+
+        <div class="muted small">
+          ※ テスト中は手書き入力と音声入力の両方が使えます。<br>
+          ※ 手書きはiPadの入力欄にApple Pencilで書く（Scribble）想定です。<br>
+          ※ 音声は端末・ブラウザ・権限により動作が異なる場合があります（iPadはSafari推奨）。<br>
+          ※ 単語集「中学2年生レベル」、「高校1年生レベル」、「高校3年生レベル」、「大学中上級レベル」の出典：『CEFR-J Wordlist Version 1.6』 東京外国語大学投野由紀夫研究室. （URL: http://www.cefr-j.org/download.html より2022年2月ダウンロード）および『DiQt English-Japanese Dictionary』BooQs Inc.
+        </div>
+      </div>
+
+    </section>
+
+    <section id="screenTest" class="screen hidden">
+      <div class="card">
+        <div class="testHeader">
+          <div class="progress" id="progressText">1/10</div>
+          <div class="scoreMini" id="scoreMini">正解 0 / 不正解 0</div>
+        </div>
+
+        <div class="wordBox">
+          <div class="word" id="promptWord">abandon</div>
+          <div class="posHint" id="posHint"></div>
+        </div>
+
+        <div class="answerArea">
+          <label class="label">日本語の意味</label>
+          <textarea id="answerInput" rows="2" placeholder="ここに入力（手書き/キーボード）"></textarea>
+
+          <div id="speechControls" class="speechControls">
+            <button id="micBtn" class="secondary">🎤 話す</button>
+            <button id="speechDoneBtn" class="ghost" disabled>確定</button>
+            <span class="muted small" id="speechHint"></span>
+          </div>
+
+          <div class="btnRow">
+            <button id="submitBtn" class="primary">送信</button>
+            <button id="nextBtn" class="secondary" disabled>次へ</button>
+            <button id="skipBtn" class="ghost">スキップ</button>
+          </div>
+
+          <div id="feedback" class="feedback hidden"></div>
+          <div id="exampleBox" class="exampleBox hidden"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screenResult" class="screen hidden">
+      <h1>結果</h1>
+      <div class="card">
+        <div class="resultLine"><span class="labelInline">得点率</span> <span id="scoreRate">0%</span></div>
+        <div class="resultLine"><span class="labelInline">正解</span> <span id="correctCount">0</span></div>
+        <div class="resultLine"><span class="labelInline">不正解</span> <span id="wrongCount">0</span></div>
+        <div class="resultLine"><span class="labelInline">スキップ</span> <span id="skipCount">0</span></div>
+
+        <div class="btnRow">
+          <button id="backHomeBtn" class="secondary">ホームへ</button>
+        </div>
+      </div>
+
+      <details class="card">
+        <summary>不正解・スキップ一覧</summary>
+        <div id="wrongList" class="list"></div>
+      </details>
+    </section>
+
+    <section id="screenWordList" class="screen hidden">
+      <h1 id="wordListTitle">単語一覧</h1>
+
+      <div class="card">
+        <div id="wordListInfo" class="muted" style="margin-bottom:8px;"></div>
+        <div id="wordList" class="list"></div>
+
+        <div class="btnRow">
+          <a id="wordListBackLink" class="secondaryBtn" href="#home">戻る</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="./app.js?v=67"></script>
+</body>
+</html>
