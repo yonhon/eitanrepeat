@@ -62,6 +62,7 @@ python -m http.server 8000
 2. Build output directory を `.`（プロジェクトルート）に設定
 3. `functions/` ディレクトリから Functions を有効化
 4. アクセスログを使う場合は D1 を `ACCESS_LOG_DB` としてバインド
+5. 端末IDをハッシュ化して表示するため、Pages の環境変数（Secret）に `LOG_HASH_SECRET` を設定
 
 ## ライセンス
 

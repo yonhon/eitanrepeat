@@ -76,21 +76,26 @@ export async function onRequestPost(context) {
     .bind(month)
     .run();
 
-  const existing = await db
-    .prepare("SELECT access_count FROM monthly_clients WHERE month_key = ? AND client_id = ?")
-    .bind(month, clientId)
-    .first();
-
-  await db
+  const inserted = await db
     .prepare(
       `INSERT INTO monthly_clients (month_key, client_id, access_count)
-       VALUES (?, ?, 1)
-       ON CONFLICT(month_key, client_id) DO UPDATE SET access_count = monthly_clients.access_count + 1`
+       VALUES (?, ?, 0)
+       ON CONFLICT(month_key, client_id) DO NOTHING`
     )
     .bind(month, clientId)
     .run();
 
-  if (!existing) {
+  await db
+    .prepare(
+      `UPDATE monthly_clients
+       SET access_count = access_count + 1
+       WHERE month_key = ? AND client_id = ?`
+    )
+    .bind(month, clientId)
+    .run();
+
+  const insertedChanges = Number(inserted?.meta?.changes || 0);
+  if (insertedChanges > 0) {
     await db
       .prepare("UPDATE monthly_stats SET unique_client_count = unique_client_count + 1 WHERE month_key = ?")
       .bind(month)

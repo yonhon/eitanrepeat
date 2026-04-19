@@ -8,6 +8,14 @@ function json(data, status = 200) {
   });
 }
 
+async function sha256Hex(text) {
+  const data = new TextEncoder().encode(String(text));
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 function monthKeyFromParts(year, month) {
   return `${year}-${String(month).padStart(2, "0")}`;
 }
@@ -53,6 +61,10 @@ export async function onRequestGet(context) {
   if (!env.ACCESS_LOG_DB) {
     return json({ ok: false, error: "db_binding_missing" }, 500);
   }
+  const secret = String(env.LOG_HASH_SECRET || "");
+  if (!secret) {
+    return json({ ok: false, error: "log_hash_secret_missing" }, 500);
+  }
 
   const url = new URL(request.url);
   const requested = Number(url.searchParams.get("months") || 12);
@@ -73,8 +85,10 @@ export async function onRequestGet(context) {
   for (const row of rowsRaw) {
     const month = String(row.month_key || "");
     if (!monthMap.has(month)) continue;
+    const rawClientId = String(row.client_id || "");
+    const clientHash = await sha256Hex(rawClientId + secret);
     monthMap.get(month).push({
-      clientId: String(row.client_id || ""),
+      clientId: clientHash,
       accessCount: Number(row.access_count || 0),
     });
   }

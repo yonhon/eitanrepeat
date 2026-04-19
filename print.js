@@ -59,25 +59,15 @@ async function loadBuiltinCSV(wordsFile){
 }
 
 function parseCSV(text){
-  const lines = text.split(/\r?\n/).filter(l => l.trim().length);
-  if (lines.length < 2) return [];
+  const table = parseCSVRows(String(text || ""));
+  if (table.length < 2) return [];
 
-  const header = lines[0].split(",").map(s => s.trim().replace(/^\ufeff/, ""));
+  const header = table[0].map(s => String(s || "").trim().replace(/^\ufeff/, ""));
   const hasId = (header[0] || "").toLowerCase() === "id";
 
   const rows = [];
-  for (let i=1;i<lines.length;i++){
-    const line = lines[i];
-    const cols = [];
-    let cur = "";
-    let inQ = false;
-    for (let c=0;c<line.length;c++){
-      const ch = line[c];
-      if (ch === '"'){ inQ = !inQ; continue; }
-      if (ch === "," && !inQ){ cols.push(cur); cur=""; continue; }
-      cur += ch;
-    }
-    cols.push(cur);
+  for (let i=1;i<table.length;i++){
+    const cols = table[i];
 
     let id = "";
     let word = "";
@@ -100,6 +90,49 @@ function parseCSV(text){
     rows.push({ id, word, expectedPos, answers });
   }
   return rows;
+}
+
+function parseCSVRows(text){
+  const out = [];
+  let row = [];
+  let field = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i++){
+    const ch = text[i];
+    const next = text[i + 1];
+
+    if (ch === '"'){
+      if (inQuotes && next === '"'){
+        field += '"';
+        i += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (!inQuotes && ch === ","){
+      row.push(field);
+      field = "";
+      continue;
+    }
+
+    if (!inQuotes && (ch === "\n" || ch === "\r")){
+      row.push(field);
+      out.push(row);
+      row = [];
+      field = "";
+      if (ch === "\r" && next === "\n") i += 1;
+      continue;
+    }
+
+    field += ch;
+  }
+
+  row.push(field);
+  out.push(row);
+  return out.filter((r) => r.some((col) => String(col || "").trim().length > 0));
 }
 
 function sampleItems(words, count){
